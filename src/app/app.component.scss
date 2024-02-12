@@ -1,0 +1,26 @@
+.main {
+    background-color: rgb(221, 214, 214);
+
+}
+
+.container {
+    width: 60%;
+    height: 100%;
+    background-color: white;
+
+    .exp {
+        border: 1px solid gray;
+    }
+}
+
+.container.VALID {
+    border: 2px solid green;
+}
+
+.container.PENDING {
+    border: 2px solid orange;
+}
+
+.container.INVALID {
+    border: 2px solid red;
+}

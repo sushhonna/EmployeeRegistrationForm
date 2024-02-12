@@ -1,0 +1,188 @@
+<section class="main">
+  <div class="container mx-auto p-3" [ngClass]="formStatus">
+    <h3 class="text-center text-primary header">Registration Form</h3>
+    <hr>
+
+    <form [formGroup]="reactiveForm" (ngSubmit)="onFormSubmit()">
+      <div class="d-flex flex-row justify-content-around mt-2">
+        <div class="form-group col-6">
+          <input type="text" class="form-control" placeholder="First Name" formControlName="firstName">
+          <small class="text-danger"
+            *ngIf="reactiveForm.get('firstName').errors?.['required'] && reactiveForm.get('firstName').touched">*
+            Firstname field is
+            required</small>
+          <small class="text-danger"
+            *ngIf="reactiveForm.get('firstName').errors?.['noSpaceContain'] && reactiveForm.get('firstName').touched">*
+            No space is allowed for firstname.</small>
+        </div>
+        <div class="form-group col-6">
+          <input type="text" class="form-control" placeholder="Lirst Name" formControlName="lastName">
+          <small class="text-danger"
+            *ngIf="reactiveForm.get('lastName').errors?.['required'] && reactiveForm.get('lastName').touched">* Lastname
+            field is
+            required</small>
+          <small class="text-danger"
+            *ngIf="reactiveForm.get('lastName').errors?.['noSpaceContain'] && reactiveForm.get('lastName').touched">* No
+            space is allowed for lastname.</small>
+        </div>
+      </div>
+
+      <div class="form-group col-12 mt-2">
+        <input type="text" class="form-control" placeholder="Email" formControlName="email">
+        <small class="text-danger" *ngIf="reactiveForm.get('email').invalid && reactiveForm.get('email').touched">*
+          Email
+          field is required</small>
+      </div>
+
+      <div class="d-flex flex-row justify-content-around mt-2">
+        <div class="form-group col-6">
+          <input type="text" class="form-control" placeholder="Username" formControlName="username">
+        </div>
+        <div class="form-group col-6">
+          <input type="date" class="form-control" placeholder="DOB" formControlName="dob">
+        </div>
+      </div>
+
+      <button class="btn btn-primary m-2" (click)="createUsername()"
+        [disabled]="!(reactiveForm.get('firstName').value && reactiveForm.get('lastName').value && reactiveForm.get('dob').value)">Create
+        a username</button><br>
+
+      <b class="m-2">Gender</b>
+      <div class="d-flex flex-row justify-content-around m-2">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" value="male" id="flexRadioDefault1" formControlName="gender">
+          <label class="form-check-label" for="flexRadioDefault1">Male</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" value="female" id="flexRadioDefault2" checked
+            formControlName="gender">
+          <label class="form-check-label" for="flexRadioDefault2">Female</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" value="other" id="flexRadioDefault2" formControlName="gender">
+          <label class="form-check-label" for="flexRadioDefault2">Prefer not to say</label>
+        </div>
+      </div>
+
+      <!-- FormGroup end -->
+      <div formGroupName="address">
+        <div class="form-group col-12 mt-2">
+          <b>Address</b>
+          <input type="text" class="form-control" placeholder="Address" formControlName="street">
+          <small class="text-danger"
+            *ngIf="reactiveForm.get('address.street').invalid && reactiveForm.get('address.street').touched">*
+            Street field is required</small>
+        </div>
+
+        <div class="d-flex flex-row justify-content-around mt-2">
+          <div class="form-group col-6">
+            <select class="form-select" aria-label="Default select example" formControlName="country">
+              <option selected>Please select a country</option>
+              <option value="india">India</option>
+              <option value="germany">Germany</option>
+              <option value="usa">USA</option>
+            </select>
+            <small class="text-danger"
+              *ngIf="reactiveForm.get('address.country').invalid && reactiveForm.get('address.country').touched">*
+              Country field is required</small>
+          </div>
+          <div class="form-group col-6">
+            <input type="text" class="form-control" placeholder="City" formControlName="city">
+          </div>
+        </div>
+
+        <div class="d-flex flex-row justify-content-around mt-2">
+          <div class="form-group col-6">
+            <input type="text" class="form-control" placeholder="Region" formControlName="region">
+          </div>
+          <div class="form-group col-6">
+            <input type="text" class="form-control" placeholder="Postal code" formControlName="postal">
+            <small class="text-danger"
+              *ngIf="reactiveForm.get('address.postal').invalid && reactiveForm.get('address.postal').touched">*
+              Postal code field is required</small>
+          </div>
+        </div>
+      </div>
+      <!-- FormGroup end -->
+
+      <!-- dynamically added & removed FormControl with FormArray on click of Add skill button start -->
+      <div class="col-12 mt-2" formArrayName="skills">
+        <b>Skills</b>
+        <div clas="d-flex flex-row justify-content-around"
+          *ngFor="let control of reactiveForm.get('skills')['controls']; let i=index">
+          <input type="text" class="col-9 mb-1" placeholder="Add skills...." [formControlName]="i">
+          <span class="offset-1"></span>
+          <button type="button" class="btn btn-secondary col-2 mb-1" (click)="deleteSkill(i)">Delete</button>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-warning mt-2" (click)="addSkills()">Add skill</button>
+      <!-- dynamically added & removed FormControl with FormArray on click of Add skill button end -->
+
+      <!-- dynamically added & removed FormGroup with FormArray on click of Add skill button start -->
+
+      <div formArrayName="experience" class="mt-2">
+        <div *ngFor="let exp of reactiveForm.get('experience')['controls']; let i=index" [formGroupName]="i">
+          <div class="exp p-2 mt-1">
+            <div class="form-group cl-12 mt-2">
+              <b>Experience {{i + 1}}</b>
+              <input type="text" class="form-control" placeholder="Company name" formControlName="company">
+            </div>
+
+            <div class="d-flex flex-row justify-content-around mt-2">
+              <div class="form-group col-6">
+                <select class="form-select" aria-label="Default select example" formControlName="position">
+                  <option hidden>Position</option>
+                  <option value="junior">Junior Developer</option>
+                  <option value="senior">Senior Developer</option>
+                  <option value="software">Software Developer</option>
+                  <option value="tl">Team lead</option>
+                </select>
+              </div>
+              <div class="form-group col-6">
+                <input type="text" class="form-control" placeholder="Experience" formControlName="totalExp">
+              </div>
+            </div>
+
+            <div class="d-flex flex-row justify-content-around mt-2">
+              <div class="form-group col-6">
+                <input type="date" class="form-control" placeholder="start date" formControlName="start">
+              </div>
+              <div class="form-group col-6">
+                <input type="date" class="form-control" placeholder="end date" formControlName="end">
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-secondary col-2 m-2" (click)="deleteExp(i)">Delete</button>
+
+          </div>
+        </div>
+        <button type="button" class="btn btn-warning mt-2" (click)="addExp()">Add experience</button>
+      </div>
+      <!-- dynamically added & removed FormGroup with FormArray on click of Add skill button end -->
+
+      <div class="form-group col-12 mt-3">
+        <button type="submit" class="btn btn-primary form-control" [disabled]="reactiveForm.invalid" (click)="resetForm()">Submit</button>
+      </div>
+
+      <div *ngIf="afterSubmit">
+        <h1>Name : {{allFormData.firstName}} {{allFormData.lastName}}</h1>
+        <p><b>Email : </b>{{allFormData.email}}</p>
+        <p><b>Username</b>{{allFormData.username}}</p>
+        <p><b>DOB : </b>{{allFormData.dob}}</p>
+        <h3>Address</h3>
+        <p><b>Street : </b>{{allFormData.address?.street}}</p>
+        <p><b>City : </b>{{allFormData.address?.city}}</p>
+        <p><b>Region : </b>{{allFormData.address?.region}}</p>
+        <p><b>Postal : </b>{{allFormData.address?.postal}}</p>
+        <h3>Skills</h3>
+        <p>{{allFormData?.skills}}</p>
+      </div>
+
+    </form>
+  </div>
+
+</section>
+
+
+
